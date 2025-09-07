@@ -1,3 +1,3 @@
-import BudgetTracker from "./budgetTracker";
+import BudgetTracker from "./budgetTracker.js";
 
 new BudgetTracker("#app");
