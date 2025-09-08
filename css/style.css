@@ -1,58 +1,106 @@
-.budget-tracker {
-    border-collapse: collapse;
-    min-width: 750px;
-}
-
-.budget-tracker * {
+html {
+    background-color: #f8f9fa;
     font-family: sans-serif;
+    color: #333;
 }
 
-.budget-tracker th {
-    text-align: left;
-    padding: 10px 20px;
-    border-bottom: 2px solid #009578;
+.main-title {
+    text-align: center;
+    color: #333;
+    margin: 20px 0;
 }
 
-.budget-tracker td {
-    padding: 10px 20px;
-    /* border-bottom: 1px solid #ddd; */
+/* Transaction Form */
+.transaction-form {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.input, .delete-entry {
-    height: 30px;
-    font-size: 13px;
-    padding: 0 10px;
-    margin: 0;
-    box-sizing: border-box;
-}
-
-.input {
-    border: 1px solid #dddddd;
-    border-radius: 5px;
+.transaction-form input,
+.transaction-form select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
     outline: none;
 }
 
-.input:focus {
-    border-color: #bbbbbb;
+.transaction-form input:focus,
+.transaction-form select:focus {
+    border-color: #3498db;
+}
+
+/* Buttons */
+button {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+button:hover {
+    background: #257db9;
 }
 
 .delete-entry {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
     background: none;
-    color: red;
     border: none;
-    border-radius: 50%;
-    outline: none;
+    color: red;
+    font-size: 16px;
     cursor: pointer;
+    transition: 0.2s;
+}
+.delete-entry:hover {
+    color: darkred;
 }
 
-.delete-entry:hover{
-    background: rgba(255, 0, 0, 0.1);
+/* Entries List */
+.entries {
+    list-style: none;
+    padding: 0;
+    max-width: 700px;
+    margin: 0 auto 20px auto;
 }
 
-.controls, .summary {
-    text-align: right;
+.entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    font-size: 14px;
+    gap: 10px;
+}
+
+/* Income vs Expense styling */
+.entry.income {
+    border-left: 4px solid #2ecc71;
+}
+.entry.expense {
+    border-left: 4px solid #e74c3c;
+}
+
+.entry span {
+    flex: 1;
+    text-align: left;
+}
+
+/* Summary */
+.summary {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 10px;
+    font-weight: bold;
 }
