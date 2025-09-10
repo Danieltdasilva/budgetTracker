@@ -1,23 +1,70 @@
+// server/server.js
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 
-// connect to MongoDB
-mongoose.connect("mongodb://127.0.0.1:27017/budgetTracker", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log("✅ Connected to MongoDB"))
-.catch(err => console.error("❌ MongoDB connection error:", err));
-
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-// Test route
-app.get("/", (req, res) => {
-  res.send("Budget Tracker API is running...");
+// --- MongoDB connect (local) ---
+await mongoose.connect("mongodb://127.0.0.1:27017/budgetTracker");
+console.log("✅ Connected to MongoDB");
+
+// --- Schema + model ---
+const entrySchema = new mongoose.Schema({
+  date: { type: String, required: true },
+  description: { type: String, required: true },
+  type: { type: String, enum: ["income", "expense"], required: true },
+  amount: { type: Number, required: true },
+});
+const Entry = mongoose.model("Entry", entrySchema);
+
+// --- Routes ---
+app.get("/entries", async (_req, res) => {
+  try {
+    console.log("🔍 Fetching entries...");
+    const entries = await Entry.find().sort({ _id: 1 });
+    console.log("✅ Entries fetched:", entries);
+    res.json(entries);
+  } catch (err) {
+    console.error("❌ Error in GET /entries:", err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
-app.listen(5000, () => console.log("✅ Server running on http://localhost:5000"));
+
+app.post("/entries", async (req, res, next) => {
+  try {
+    const { date, description, type, amount } = req.body;
+    const newEntry = await Entry.create({
+      date,
+      description,
+      type,
+      amount: Number(amount),
+    });
+    res.json(newEntry);
+  } catch (e) { next(e); }
+});
+
+app.delete("/entries/:id", async (req, res, next) => {
+  try {
+    await Entry.findByIdAndDelete(req.params.id);
+    res.json({ message: "Deleted" });
+  } catch (e) { next(e); }
+});
+
+// Health check
+app.get("/", (_req, res) => res.send("Budget Tracker API is running..."));
+
+// Basic error handler (helps surface issues as JSON)
+app.use((err, _req, res, _next) => {
+  console.error(err);
+  res.status(500).json({ error: err.message });
+});
+
+// --- Listen ---
+const PORT = 5000;
+app.listen(PORT, () =>
+  console.log(`✅ Server running on http://localhost:${PORT}`)
+);

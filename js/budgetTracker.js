@@ -3,12 +3,12 @@ export default class BudgetTracker {
         this.root = document.querySelector(querySelectorString);
         this.root.innerHTML = BudgetTracker.html();
 
-        // Add entry button
+        // Bind add button
         this.root.querySelector(".add-entry").addEventListener("click", () => {
             this.onAddEntryBtnClick();
         });
 
-        // Load data from local storage
+        // Load initial data from backend
         this.load();
     }
 
@@ -38,7 +38,7 @@ export default class BudgetTracker {
 
     static entryHtml(entry) {
         return `
-            <li class="entry ${entry.type}">
+            <li class="entry ${entry.type}" data-id="${entry._id}">
                 <span class="entry-date">${entry.date}</span>
                 <span class="entry-description">${entry.description}</span>
                 <span class="entry-type">${entry.type}</span>
@@ -48,8 +48,10 @@ export default class BudgetTracker {
         `;
     }
 
-    load() {
-        const entries = JSON.parse(localStorage.getItem("budget-tracker-entries") || "[]");
+    // --- API Calls ---
+    async load() {
+        const res = await fetch("http://localhost:5000/entries");
+        const entries = await res.json();
 
         for (const entry of entries) {
             this.addEntry(entry);
@@ -58,37 +60,22 @@ export default class BudgetTracker {
         this.updateSummary();
     }
 
-    save() {
-        const data = this.getEntryRows().map(row => {
-            return {
-                date: row.querySelector(".entry-date").textContent,
-                description: row.querySelector(".entry-description").textContent,
-                type: row.querySelector(".entry-type").textContent,
-                amount: parseFloat(row.querySelector(".entry-amount").textContent.replace("$", "")),
-            };
+    async addEntryToBackend(entry) {
+        const res = await fetch("http://localhost:5000/entries", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(entry)
         });
-
-        localStorage.setItem("budget-tracker-entries", JSON.stringify(data));
-        this.updateSummary();
+        return await res.json();
     }
 
-    updateSummary() {
-        const total = this.getEntryRows().reduce((total, row) => {
-            const amount = parseFloat(row.querySelector(".entry-amount").textContent.replace("$", ""));
-            const isExpense = row.classList.contains("expense");
-            const modifier = isExpense ? -1 : 1;
-
-            return total + (amount * modifier);
-        }, 0);
-
-        const totalFormatted = new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-        }).format(total);
-
-        this.root.querySelector(".total").textContent = totalFormatted;
+    async deleteEntryFromBackend(id) {
+        await fetch(`http://localhost:5000/entries/${id}`, {
+            method: "DELETE"
+        });
     }
 
+    // --- UI Logic ---
     addEntry(entry) {
         this.root.querySelector(".entries").insertAdjacentHTML("beforeend", BudgetTracker.entryHtml(entry));
 
@@ -105,7 +92,7 @@ export default class BudgetTracker {
         return Array.from(this.root.querySelectorAll(".entries li"));
     }
 
-    onAddEntryBtnClick() {
+    async onAddEntryBtnClick() {
         const date = this.root.querySelector(".input-date").value || new Date().toISOString().split("T")[0];
         const description = this.root.querySelector(".input-description").value;
         const type = this.root.querySelector(".input-type").value;
@@ -114,16 +101,40 @@ export default class BudgetTracker {
         if (!description.trim() || !amount) return;
 
         const entry = { date, description, type, amount };
-        this.addEntry(entry);
-        this.save();
 
-        // Reset form inputs
+        // Save to backend
+        const savedEntry = await this.addEntryToBackend(entry);
+
+        // Show in UI
+        this.addEntry(savedEntry);
+
+        // Clear inputs
         this.root.querySelector(".input-description").value = "";
         this.root.querySelector(".input-amount").value = "";
     }
 
-    onDeleteEntryBtnClick(e) {
-        e.target.closest("li").remove();
-        this.save();
+    async onDeleteEntryBtnClick(e) {
+        const row = e.target.closest("li");
+        const id = row.dataset.id;
+
+        await this.deleteEntryFromBackend(id);
+
+        row.remove();
+        this.updateSummary();
+    }
+
+    updateSummary() {
+        const total = this.getEntryRows().reduce((total, row) => {
+            const amount = parseFloat(row.querySelector(".entry-amount").textContent.replace("$", ""));
+            const isExpense = row.classList.contains("expense");
+            return total + (isExpense ? -amount : amount);
+        }, 0);
+
+        const totalFormatted = new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+        }).format(total);
+
+        this.root.querySelector(".total").textContent = totalFormatted;
     }
 }
