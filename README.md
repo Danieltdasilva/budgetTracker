@@ -16,7 +16,7 @@ It allows users to add **income** and **expenses**, keeps a running **balance to
 - Entries are styled with:
   - ✅ Green accent for income
   - ❌ Red accent for expenses
-- **Persistent storage** using `localStorage`.
+- **Persistent storage** using `MongoDB and Mongoosh`.
 - Clean, responsive UI.
 
 ---
@@ -24,4 +24,5 @@ It allows users to add **income** and **expenses**, keeps a running **balance to
 ## 🛠️ Technologies Used
 - **HTML5** – Structure
 - **CSS3** – Styling
-- **JavaScript** – Functionality and localStorage
+- **JavaScript** – Functionality
+- **MongoDB** – Storage
