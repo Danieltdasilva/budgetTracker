@@ -1,7 +1,7 @@
 # 💰 Budget Tracker App
 
 A simple, lightweight **budget tracking web app** built with vanilla **JavaScript, HTML, and CSS**.  
-It allows users to add **income** and **expenses**, keeps a running **balance total**, and saves data in **localStorage** so it persists after refreshing the page.
+It allows users to add **income** and **expenses**, keeps a running **balance total**, and saves data in **MongoDB** so it persists after refreshing the page.
 
 ---
 
@@ -16,7 +16,7 @@ It allows users to add **income** and **expenses**, keeps a running **balance to
 - Entries are styled with:
   - ✅ Green accent for income
   - ❌ Red accent for expenses
-- **Persistent storage** using `MongoDB and Mongoosh`.
+- **Persistent storage** using `MongoDB and Mongoose`.
 - Clean, responsive UI.
 
 ---
