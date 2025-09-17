@@ -104,3 +104,9 @@ button:hover {
     margin-top: 10px;
     font-weight: bold;
 }
+
+.row-actions {
+display: flex;
+gap: 8px;
+align-items: center;
+}
