@@ -26,15 +26,20 @@ return `
     </select>
     <input type="number" class="input-amount" placeholder="0">
     <button type="button" class="add-entry">Add</button>
-</div>
-<ul class="entries"></ul>
-<div class="summary">
-    <strong>Total: </strong>
-    <span class="total">$0.00</span>
-</div>
-<div class="charts">
-  <canvas id="summaryChart"></canvas>
-</div>
+    <div class="layout">
+      <div class="left-panel">
+        <ul class="entries"></ul>
+        <div class="summary">
+            <strong>Total: </strong>
+            <span class="total">$0.00</span>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <h2>Overview</h2>
+        <canvas id="summaryChart"></canvas>
+      </div>
+    </div>
 `;
 }
 
