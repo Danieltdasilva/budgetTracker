@@ -1,55 +1,64 @@
 const API_URL = "http://localhost:5000";
 
-const form = document.getElementById("auth-form");
-const toggle = document.getElementById("toggle-auth");
-const errorBox = document.getElementById("auth-error");
+let isLogin = true; // mode tracker
 
-let isLogin = true; // toggle state
-
-toggle.addEventListener("click", (e) => {
+document.getElementById("auth-form").addEventListener("submit", async (e) => {
   e.preventDefault();
-  isLogin = !isLogin;
-  document.querySelector("h1").textContent = isLogin
-    ? "Budget Tracker - Login"
-    : "Budget Tracker - Sign Up";
-  form.querySelector("button").textContent = isLogin ? "Login" : "Sign Up";
-  toggle.textContent = isLogin
-    ? "Sign up here"
-    : "Already have an account? Login";
-});
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  errorBox.textContent = "";
 
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
   try {
-    const res = await fetch(`${API_URL}/${isLogin ? "login" : "signup"}`, {
+    const endpoint = isLogin ? "/login" : "/signup";
+
+    const res = await fetch(`${API_URL}${endpoint}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
 
+    if (!res.ok) {
+      const msg = isLogin ? "Invalid login" : "Signup failed";
+      document.getElementById("auth-error").textContent = msg;
+      return;
+    }
+
     const data = await res.json();
 
-    if (!res.ok) {
-      throw new Error(data.error || "Something went wrong");
-    }
-
     if (isLogin) {
-      // store token and redirect
+      // login flow → save token + redirect
       localStorage.setItem("token", data.token);
-      window.location.href = "index.html"; // go to main app
+      window.location.href = "index.html";
     } else {
-      alert("✅ Signup successful! Please login.");
-      isLogin = true;
-      document.querySelector("h1").textContent = "Budget Tracker - Login";
-      form.querySelector("button").textContent = "Login";
-      toggle.textContent = "Sign up here";
+      // signup flow → just show message
+      document.getElementById("auth-error").style.color = "green";
+      document.getElementById("auth-error").textContent =
+        "Signup successful! You can now login.";
     }
   } catch (err) {
-    errorBox.textContent = err.message;
+    console.error("Auth failed:", err);
+    document.getElementById("auth-error").textContent = "Something went wrong";
   }
+});
+
+// toggle login/signup mode
+document.getElementById("toggle-auth").addEventListener("click", (e) => {
+  e.preventDefault();
+  isLogin = !isLogin;
+
+  const authButton = document.getElementById("auth-button");
+  const toggleText = document.getElementById("auth-toggle-text");
+  const toggleLink = document.getElementById("toggle-auth");
+
+  if (isLogin) {
+    authButton.textContent = "Login";
+    toggleText.textContent = "Don’t have an account?";
+    toggleLink.textContent = "Sign up here";
+  } else {
+    authButton.textContent = "Sign Up";
+    toggleText.textContent = "Already have an account?";
+    toggleLink.textContent = "Login here";
+  }
+
+  document.getElementById("auth-error").textContent = "";
 });

@@ -6,9 +6,25 @@ constructor(querySelectorString) {
 this.root = document.querySelector(querySelectorString);
 this.root.innerHTML = BudgetTracker.html();
 
+// 🔒 Redirect to login if no token exists
+if (!localStorage.getItem("token")) {
+  window.location.href = "login.html";
+  return;
+}
+
+
 this.root.querySelector(".add-entry").addEventListener("click", () => {
     this.onAddEntryBtnClick();
 });
+
+const logoutBtn = document.getElementById("logout-btn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+  });
+}
+
 
 this.load();
 this.initChart();
@@ -16,7 +32,11 @@ this.initChart();
 
 static html() {
 return `
-<h1 class="main-title">Budgeting App</h1>
+<div class="header-bar">
+  <h1 class="main-title">Budgeting App</h1>
+  <button id="logout-btn">Logout</button>
+</div>
+
 <div class="transaction-form">
     <input type="date" class="input-date">
     <input type="text" class="input-description" placeholder="Enter description (bills, groceries, etc.)">
