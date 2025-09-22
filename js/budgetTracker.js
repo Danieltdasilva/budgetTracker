@@ -73,7 +73,10 @@ return `
 
 // --- API Calls ---
 async load() {
-const res = await fetch(`${API_URL}/entries`);
+const res = await fetch(`${API_URL}/entries`, { headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}` 
+    }
+    });
 const entries = await res.json();
 
 this.root.querySelector(".entries").innerHTML = "";
@@ -88,7 +91,10 @@ this.updateSummary();
 async addEntryToBackend(entry) {
 const res = await fetch(`${API_URL}/entries`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    },
     body: JSON.stringify(entry)
 });
 return await res.json();
@@ -96,7 +102,10 @@ return await res.json();
 
 async deleteEntryFromBackend(id) {
 await fetch(`${API_URL}/entries/${id}`, {
-    method: "DELETE"
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    }
 });
 }
 
@@ -184,7 +193,10 @@ if (this.chart) {
 async updateEntryInBackend(id, updates) {
 const res = await fetch(`${API_URL}/entries/${id}`, {
 method: "PUT",
-headers: { "Content-Type": "application/json" },
+headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem("token")}`
+    },
 body: JSON.stringify(updates),
 });
 if (!res.ok) {
