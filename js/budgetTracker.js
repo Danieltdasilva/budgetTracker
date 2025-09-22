@@ -25,7 +25,18 @@ return `
         <option value="expense">Expense</option> 
     </select>
     <input type="number" class="input-amount" placeholder="0">
+    <select class="input-category">
+    <option value="General">General</option>
+    <option value="Food">Food</option>
+    <option value="Transportation">Transportation</option>
+    <option value="Entertainment">Entertainment</option>
+    <option value="Health">Health</option>
+    <option value="Utilities">Utilities</option>
+    <option value="Miscellaneous">Miscellaneous</option>
+</select>
+
     <button type="button" class="add-entry">Add</button>
+</div>
     <div class="layout">
       <div class="left-panel">
         <ul class="entries"></ul>
@@ -119,7 +130,7 @@ const date = this.root.querySelector(".input-date").value || new Date().toISOStr
 const description = this.root.querySelector(".input-description").value;
 const type = this.root.querySelector(".input-type").value;
 const amount = parseFloat(this.root.querySelector(".input-amount").value) || 0;
-const category = "General"; // Default category for new entries
+const category = this.root.querySelector(".input-category").value = "General"; // Default category for new entries
 
 if (!description.trim() || !amount) return;
 
@@ -264,13 +275,33 @@ initChart() {
       datasets: [
         {
           label: "Budget Breakdown",
-          data: [0, 0], // will update dynamically
+          data: [0, 0],
           backgroundColor: ["#2ecc71", "#e74c3c"], // green, red
         },
       ],
     },
+    options: {
+      plugins: {
+        datalabels: {
+          color: "#fff",
+          font: { weight: "bold", size: 14 },
+          formatter: (value, context) => {
+            const dataset = context.chart.data.datasets[0].data;
+            const total = dataset.reduce((a, b) => a + b, 0);
+            if (total === 0) return "0%";
+            const percentage = Math.round((value / total) * 100);
+            return percentage + "%";
+          },
+        },
+        legend: {
+          position: "bottom",
+        },
+      },
+    },
+    plugins: [ChartDataLabels],
   });
 }
+
 
 
 replaceRowWithDisplay(row, entry) {
