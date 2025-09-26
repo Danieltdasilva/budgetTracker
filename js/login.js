@@ -1,64 +1,65 @@
 const API_URL = "http://localhost:5000";
 
-let isLogin = true; // mode tracker
-
 document.getElementById("auth-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
+  e.preventDefault(); // prevent page reload
 
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
+  const isLogin = document.querySelector("button[type='submit']").textContent === "Login";
 
   try {
-    const endpoint = isLogin ? "/login" : "/signup";
-
-    const res = await fetch(`${API_URL}${endpoint}`, {
+    const res = await fetch(`${API_URL}/${isLogin ? "login" : "signup"}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
 
-    if (!res.ok) {
-      const msg = isLogin ? "Invalid login" : "Signup failed";
-      document.getElementById("auth-error").textContent = msg;
-      return;
-    }
+if (!res.ok) {
+  const msg = isLogin ? "Invalid login" : "Signup failed";
+  const errorBox = document.getElementById("auth-error");
+  errorBox.textContent = msg;
+  errorBox.style.display = "block"; // 👈 make it visible
+  return;
+}
+
 
     const data = await res.json();
 
-    if (isLogin) {
-      // login flow → save token + redirect
-      localStorage.setItem("token", data.token);
-      window.location.href = "index.html";
-    } else {
-      // signup flow → just show message
-      document.getElementById("auth-error").style.color = "green";
-      document.getElementById("auth-error").textContent =
-        "Signup successful! You can now login.";
-    }
+    // ✅ Success case feedback
+    document.getElementById("auth-error").textContent = "";
+    document.getElementById("auth-status").style.color = "green";
+    document.getElementById("auth-status").textContent = isLogin
+      ? "✅ Login successful! Redirecting..."
+      : "✅ Signup successful! Redirecting...";
+
+    localStorage.setItem("token", data.token);
+
+    // Small delay so user sees the message
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 1000);
+
   } catch (err) {
-    console.error("Auth failed:", err);
-    document.getElementById("auth-error").textContent = "Something went wrong";
-  }
+  console.error("Auth failed:", err);
+  const errorBox = document.getElementById("auth-error");
+  errorBox.textContent = "Something went wrong. Try again.";
+  errorBox.style.display = "block"; // 👈 make it visible
+}
 });
 
-// toggle login/signup mode
+// Toggle between Login and Signup
 document.getElementById("toggle-auth").addEventListener("click", (e) => {
   e.preventDefault();
-  isLogin = !isLogin;
+  const submitBtn = document.querySelector("button[type='submit']");
+  const title = document.querySelector("h1");
 
-  const authButton = document.getElementById("auth-button");
-  const toggleText = document.getElementById("auth-toggle-text");
-  const toggleLink = document.getElementById("toggle-auth");
-
-  if (isLogin) {
-    authButton.textContent = "Login";
-    toggleText.textContent = "Don’t have an account?";
-    toggleLink.textContent = "Sign up here";
+  if (submitBtn.textContent === "Login") {
+    submitBtn.textContent = "Signup";
+    title.textContent = "Budget Tracker - Signup";
+    document.getElementById("toggle-auth").textContent = "Already have an account? Login here";
   } else {
-    authButton.textContent = "Sign Up";
-    toggleText.textContent = "Already have an account?";
-    toggleLink.textContent = "Login here";
+    submitBtn.textContent = "Login";
+    title.textContent = "Budget Tracker - Login";
+    document.getElementById("toggle-auth").textContent = "Don’t have an account? Sign up here";
   }
-
-  document.getElementById("auth-error").textContent = "";
 });
