@@ -33,7 +33,7 @@ app.use(express.json());
 console.log("MONGO_URI is:", process.env.MONGO_URI ? "Loaded ✅" : "Missing ❌");
 
 // --- MongoDB connection ---
-await mongoose.connect(process.env.MONGODB_URI);
+await mongoose.connect(process.env.MONGO_URI);
 console.log("✅ Connected to MongoDB");
 
 // --- JWT secret ---
