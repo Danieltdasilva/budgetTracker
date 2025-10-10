@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
-dotenv.config({ path: "./server/.env" }); // 🔑 Load .env variables
+dotenv.config(); // 🔑 Load .env variables
 
 // --- Models ---
 const userSchema = new mongoose.Schema({

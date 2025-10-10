@@ -1,0 +1,50 @@
+.auth-container {
+  @include flex-center;
+  height: 100vh;
+  background: $secondary-color;
+
+  form {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 350px;
+    @include box-shadow();
+
+    h1 {
+      text-align: center;
+      color: $primary-color;
+      margin-bottom: 1.5rem;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-family: $font-stack;
+    }
+
+    button {
+      width: 100%;
+      background: $primary-color;
+      color: white;
+      border: none;
+      padding: 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+
+      &:hover {
+        background: darken($primary-color, 5%);
+      }
+    }
+
+    #auth-error {
+      color: $error-color;
+      margin-top: 0.5rem;
+      text-align: center;
+      display: none;
+    }
+  }
+}
