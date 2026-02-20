@@ -141,7 +141,8 @@ export default class BudgetTracker {
       });
 
       this.addEntry(savedEntry);
-
+      this.updateSummary();
+      
       this.root.querySelector(".input-description").value = "";
       this.root.querySelector(".input-amount").value = "";
     } catch (err) {
@@ -185,24 +186,42 @@ export default class BudgetTracker {
     }
   }
 
-  updateSummary() {
-    const total = Array.from(
-      this.root.querySelectorAll(".entries li")
-    ).reduce((total, row) => {
-      const amount = parseFloat(
-        row.querySelector(".entry-amount")
-          .textContent.replace("$", "")
-      );
-      return total + (row.classList.contains("expense") ? -amount : amount);
-    }, 0);
+updateSummary() {
+  const rows = Array.from(
+    this.root.querySelectorAll(".entries li")
+  );
 
-    const formatted = new Intl.NumberFormat("en-US", {
+  let income = 0;
+  let expenses = 0;
+
+  rows.forEach(row => {
+    const amount = parseFloat(
+      row.querySelector(".entry-amount")
+        .textContent.replace("$", "")
+    );
+
+    if (row.classList.contains("expense")) {
+      expenses += amount;
+    } else {
+      income += amount;
+    }
+  });
+
+  const total = income - expenses;
+
+  // Update total
+  this.root.querySelector(".total").textContent =
+    new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
     }).format(total);
 
-    this.root.querySelector(".total").textContent = formatted;
+  // Update chart
+  if (this.chart) {
+    this.chart.data.datasets[0].data = [income, expenses];
+    this.chart.update();
   }
+}
 
   addEntry(entry) {
     this.root.querySelector(".entries")
