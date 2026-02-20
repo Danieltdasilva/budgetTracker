@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
-dotenv.config(); // 🔑 Load .env variables
+dotenv.config({ path: "./server/.env" }); // 🔑 Load .env variables
 
 // --- Models ---
 const userSchema = new mongoose.Schema({
@@ -33,8 +33,13 @@ app.use(express.json());
 console.log("MONGO_URI is:", process.env.MONGO_URI ? "Loaded ✅" : "Missing ❌");
 
 // --- MongoDB connection ---
-await mongoose.connect(process.env.MONGO_URI);
-console.log("✅ Connected to MongoDB");
+try {
+  await mongoose.connect(process.env.MONGO_URI);
+  console.log("✅ Connected to MongoDB");
+} catch (err) {
+  console.error("❌ MongoDB connection failed:", err);
+  process.exit(1);
+}
 
 // --- JWT secret ---
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -155,3 +160,16 @@ app.use((err, _req, res, _next) => {
 // --- Listen ---
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve static frontend
+app.use(express.static(path.join(__dirname, "../")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../login.html"));
+});
