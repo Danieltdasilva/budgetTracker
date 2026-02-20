@@ -13,3 +13,4 @@ server/.env
 # OS system files
 .DS_Store
 Thumbs.db
+.env
