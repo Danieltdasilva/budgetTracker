@@ -21,12 +21,10 @@ document.getElementById("auth-form").addEventListener("submit", async (e) => {
       ? await api.login(email, password)
       : await api.signup(email, password);
 
-    // Store token if returned
     if (data.token) {
       localStorage.setItem("token", data.token);
     }
 
-    // Success feedback
     statusBox.style.color = "green";
     statusBox.textContent = isLogin
       ? "✅ Login successful! Redirecting..."
@@ -37,15 +35,16 @@ document.getElementById("auth-form").addEventListener("submit", async (e) => {
     }, 1000);
 
   } catch (err) {
-    console.error("Auth failed:", err);
-
-    errorBox.textContent = isLogin
-      ? "Invalid email or password."
-      : "Signup failed. Try again.";
+    errorBox.textContent = err.message.includes("Email already exists")
+      ? "Email already registered."
+      : isLogin
+        ? "Invalid email or password."
+        : "Signup failed.";
 
     errorBox.style.display = "block";
   }
-});
+}); // ✅ THIS closes the submit listener
+
 
 // Toggle between Login and Signup
 document.getElementById("toggle-auth").addEventListener("click", (e) => {

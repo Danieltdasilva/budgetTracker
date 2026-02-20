@@ -77,8 +77,19 @@ app.post("/signup", async (req, res, next) => {
 
     const newUser = await User.create({ email, passwordHash });
 
-    res.json({ message: "User created", userId: newUser._id });
+    const token = jwt.sign(
+      { userId: newUser._id, email: newUser.email },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.json({ token });
+
   } catch (err) {
+    if (err.code === 11000) {
+      return res.status(400).json({ error: "Email already exists" });
+    }
+
     next(err);
   }
 });
