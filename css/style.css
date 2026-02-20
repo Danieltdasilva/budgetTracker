@@ -1,3 +1,83 @@
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: #f5f7fa;
+}
+
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #4a90e2;
+  color: white;
+  padding: 1.2rem 2rem;
+}
+
+.header-bar h1 {
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.header-right {
+  text-align: right;
+}
+
+#logout-btn {
+  margin-top: 6px;
+  padding: 6px 12px;
+  border: none;
+  background: white;
+  color: #4a90e2;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#logout-btn:hover {
+  background: #e8f1ff;
+}
+
+.transaction-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 25px;
+  flex-wrap: wrap;
+}
+
+.transaction-form input,
+.transaction-form select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.add-entry {
+  padding: 8px 16px;
+  border: none;
+  background: #4a90e2;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.add-entry:hover {
+  background: #357bd8;
+}
+
+.layout {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 40px;
+}
+
+.left-panel,
+.right-panel {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
 .auth-container {
   display: flex;
   justify-content: center;
@@ -5,6 +85,7 @@
   height: 100vh;
   background: #f4f4f4;
 }
+
 .auth-container form {
   background: white;
   padding: 2rem;
@@ -12,11 +93,13 @@
   width: 350px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
 .auth-container form h1 {
   text-align: center;
   color: #4a90e2;
   margin-bottom: 1.5rem;
 }
+
 .auth-container form input {
   display: block;
   width: 100%;
@@ -26,6 +109,7 @@
   border-radius: 8px;
   font-family: "Poppins", sans-serif;
 }
+
 .auth-container form button {
   width: 100%;
   background: #4a90e2;
@@ -35,9 +119,11 @@
   border-radius: 8px;
   cursor: pointer;
 }
+
 .auth-container form button:hover {
   background: rgb(52.0214285714, 130.5214285714, 222.4785714286);
 }
+
 .auth-container form #auth-error {
   color: #e74c3c;
   margin-top: 0.5rem;
@@ -45,39 +131,51 @@
   display: none;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
+.entries {
+  list-style: none;
+  padding: 0;
 }
 
-.header-bar {
+.entry {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #4a90e2;
-  color: white;
-  padding: 1rem 2rem;
+  padding: 12px 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 15px;
 }
 
-.transaction-form {
-  display: flex;
-  gap: 10px;
-  padding: 1rem 2rem;
+.entry-income {
+  color: #2ecc71;
 }
 
-.layout {
-  display: flex;
-  padding: 2rem;
-  gap: 2rem;
+.entry-expense {
+  color: #e74c3c;
 }
 
-.left-panel {
-  flex: 1;
+.row-actions button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.summary {
+  margin-top: 15px;
+  font-size: 18px;
+}
+
+.total {
+  font-weight: bold;
 }
 
 .right-panel {
   width: 350px;
+  text-align: center;
+}
+
+.right-panel h2 {
+  margin-bottom: 20px;
 }
 
 /*# sourceMappingURL=style.css.map */
