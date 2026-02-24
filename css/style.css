@@ -8,6 +8,10 @@ body {
   height: 100vh;
 }
 
+/* =========================
+   DASHBOARD LAYOUT
+========================= */
+
 .header-bar {
   display: flex;
   justify-content: space-between;
@@ -83,6 +87,15 @@ body {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
   width: 480px;
 }
+
+/* Prevent overflow pushing buttons outside */
+.left-panel {
+  overflow: hidden;
+}
+
+/* =========================
+   AUTH PAGE
+========================= */
 
 .auth-container {
   background: white;
@@ -191,44 +204,89 @@ body {
   color: #2ecc71;
 }
 
+/* =========================
+   ENTRIES LIST (FIXES)
+========================= */
+
 .entries {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
+/* ✅ Dedicated actions column + prevent overflow */
 .entry {
   display: grid;
-  grid-template-columns: 120px 1fr 90px 110px 100px 90px;
+  grid-template-columns: 110px 1fr 80px 90px 100px 70px; /* last col is actions */
   align-items: center;
   gap: 12px;
-  padding: 12px 10px;
+  padding: 12px 14px;
   border-bottom: 1px solid #eee;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .entry:hover {
   background: #f9fbff;
 }
 
-.entry-income {
+/* ✅ Prevent text from pushing actions outside */
+.entry > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ✅ Keep edit-mode inputs/selects from overflowing the grid */
+.entry input,
+.entry select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+/* Your entry class names are actually: "entry income" / "entry expense" */
+.entry.income {
   color: #2ecc71;
 }
 
-.entry-expense {
+.entry.expense {
   color: #e74c3c;
 }
 
+/* ✅ Keep actions inside card */
 .row-actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
+  width: 100%;
 }
 
 .row-actions button {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+}
+
+/* Make the X look like an icon button */
+.row-actions .delete-entry {
   border: none;
   background: transparent;
-  cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  padding: 6px 8px;
 }
+
+/* =========================
+   SUMMARY
+========================= */
 
 .summary {
   margin-top: 20px;
@@ -244,9 +302,13 @@ body {
   color: #e74c3c;
 }
 
+/* =========================
+   RIGHT PANEL
+========================= */
+
 .right-panel {
   margin-bottom: 25px;
-  font-weight: 600px;
+  font-weight: 600; /* fixed: was 600px */
   width: 350px;
   text-align: center;
 }
