@@ -96,7 +96,7 @@ body {
 }
 
 /* Prevent overflow pushing buttons outside */
-.left-panel entry {
+.left-panel {
   overflow: hidden;
 }
 
@@ -237,7 +237,7 @@ body {
   background: #f9fbff;
 }
 
-/* ✅ Prevent text from pushing actions outside */
+/* Prevent text from pushing actions outside */
 .entry > span {
   min-width: 0;
   overflow: hidden;
@@ -245,7 +245,7 @@ body {
   white-space: nowrap;
 }
 
-/* ✅ Keep edit-mode inputs/selects from overflowing the grid */
+/* Keep edit-mode inputs/selects from overflowing the grid */
 .entry input,
 .entry select {
   width: 100%;
@@ -258,11 +258,11 @@ body {
 
 /* Your entry class names are actually: "entry income" / "entry expense" */
 .entry.income {
-  color: #2ecc71;
+  color: #000000;
 }
 
 .entry.expense {
-  color: #e74c3c;
+  color: #000000;
 }
 
 /* ✅ Keep actions inside card */

@@ -204,8 +204,12 @@ async load() {
 
     try {
       const updated = await api.updateEntry(id, updates);
-      this.replaceRowWithDisplay(row, updated);
-      this.updateSummary();
+        // update internal state
+        this.entries = this.entries.map(entry =>
+          entry._id === id ? updated : entry
+        );
+        this.replaceRowWithDisplay(row, updated);
+        this.updateSummary();
     } catch (err) {
       console.error("Update failed:", err);
     }
