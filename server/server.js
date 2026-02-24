@@ -9,6 +9,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 dotenv.config(); // Render injects env vars automatically
+console.log("Loaded URI:", process.env.MONGO_URI);
 
 // --- Models ---
 const userSchema = new mongoose.Schema({

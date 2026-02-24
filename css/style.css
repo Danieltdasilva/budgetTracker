@@ -1,7 +1,11 @@
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
-  background: #f5f7fa;
+  background: linear-gradient(135deg, #eef2f7, #f8fbff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .header-bar {
@@ -81,11 +85,35 @@ body {
 }
 
 .auth-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: #f4f4f4;
+  background: white;
+  padding: 3rem 2.5rem;
+  border-radius: 18px;
+  width: 380px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+}
+
+.auth-container h1 {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.auth-container input {
+  width: 100%;
+  padding: 0.9rem;
+  margin-bottom: 1.2rem;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.auth-container input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
 
 .auth-container form {
@@ -112,18 +140,20 @@ body {
   font-family: "Poppins", sans-serif;
 }
 
-.auth-container form button {
+.auth-container button {
   width: 100%;
+  padding: 0.9rem;
+  border-radius: 10px;
+  border: none;
   background: #4a90e2;
   color: white;
-  border: none;
-  padding: 0.75rem;
-  border-radius: 8px;
+  font-weight: 500;
   cursor: pointer;
+  transition: 0.2s ease;
 }
 
-.auth-container form button:hover {
-  background: rgb(52.0214285714, 130.5214285714, 222.4785714286);
+.auth-container button:hover {
+  background: #357bd8;
 }
 
 .auth-container form #auth-error {
@@ -131,6 +161,34 @@ body {
   margin-top: 0.5rem;
   text-align: center;
   display: none;
+}
+
+.auth-container p {
+  margin-top: 1.5rem;
+  font-size: 14px;
+  color: #666;
+}
+
+.auth-container a {
+  color: #4a90e2;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.auth-container a:hover {
+  text-decoration: underline;
+}
+
+#auth-error {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #e74c3c;
+}
+
+#auth-status {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #2ecc71;
 }
 
 .entries {
