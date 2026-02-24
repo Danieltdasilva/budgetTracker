@@ -33,6 +33,28 @@ export default class BudgetTracker {
     this.initChart();
   }
 
+replaceRowWithDisplay(row, entry) {
+  row.className = `entry ${entry.type}`;
+  row.setAttribute("data-id", entry._id);
+  row.innerHTML = `
+    <span class="entry-date">${entry.date}</span>
+    <span class="entry-description">${entry.description}</span>
+    <span class="entry-type">${entry.type}</span>
+    <span class="entry-category">${entry.category}</span>
+    <span class="entry-amount">$${Number(entry.amount).toFixed(2)}</span>
+    <div class="row-actions">
+      <button type="button" class="edit-entry">Edit</button>
+      <button type="button" class="delete-entry">✖</button>
+    </div>
+  `;
+
+  row.querySelector(".delete-entry")
+    .addEventListener("click", (e) => this.onDeleteEntryBtnClick(e));
+
+  row.querySelector(".edit-entry")
+    .addEventListener("click", () => this.enterEditMode(row));
+}
+
   static html() {
     return `
       <div class="header-bar">
@@ -96,21 +118,23 @@ export default class BudgetTracker {
     `;
   }
 
-  async load() {
-    try {
-      const entries = await api.getEntries();
+async load() {
+  try {
+    const entries = await api.getEntries();
 
-      this.root.querySelector(".entries").innerHTML = "";
+    this.entries = entries;   // ← store data
 
-      for (const entry of entries) {
-        this.addEntry(entry);
-      }
+    this.root.querySelector(".entries").innerHTML = "";
 
-      this.updateSummary();
-    } catch (err) {
-      console.error("Failed to load entries:", err);
+    for (const entry of entries) {
+      this.addEntry(entry);
     }
+
+    this.updateSummary();
+  } catch (err) {
+    console.error("Failed to load entries:", err);
   }
+}
 
   async onAddEntryBtnClick() {
     const date =
@@ -139,7 +163,7 @@ export default class BudgetTracker {
         amount,
         category
       });
-
+      this.entries.push(savedEntry);
       this.addEntry(savedEntry);
       this.updateSummary();
       
@@ -156,6 +180,7 @@ export default class BudgetTracker {
 
     try {
       await api.deleteEntry(id);
+      this.entries = this.entries.filter(e => e._id !==id);
       row.remove();
       this.updateSummary();
     } catch (err) {
@@ -187,36 +212,25 @@ export default class BudgetTracker {
   }
 
 updateSummary() {
-  const rows = Array.from(
-    this.root.querySelectorAll(".entries li")
-  );
-
   let income = 0;
   let expenses = 0;
 
-  rows.forEach(row => {
-    const amount = parseFloat(
-      row.querySelector(".entry-amount")
-        .textContent.replace("$", "")
-    );
-
-    if (row.classList.contains("expense")) {
-      expenses += amount;
+  this.entries.forEach(entry => {
+    if (entry.type === "expense") {
+      expenses += entry.amount;
     } else {
-      income += amount;
+      income += entry.amount;
     }
   });
 
   const total = income - expenses;
 
-  // Update total
   this.root.querySelector(".total").textContent =
     new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
     }).format(total);
 
-  // Update chart
   if (this.chart) {
     this.chart.data.datasets[0].data = [income, expenses];
     this.chart.update();
