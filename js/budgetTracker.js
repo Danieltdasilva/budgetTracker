@@ -5,6 +5,8 @@ export default class BudgetTracker {
     this.root = document.querySelector(querySelectorString);
     this.root.innerHTML = BudgetTracker.html();
 
+    this.entries =[];
+    
     const token = localStorage.getItem("token");
     if (!token) {
       window.location.href = "login.html";
