@@ -79,7 +79,14 @@ body {
   padding: 50px 20px;
 }
 
-.left-panel,
+.left-panel {
+  background: white;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  width: 480px;
+}
+
 .right-panel {
   background: white;
   padding: 30px;
@@ -89,7 +96,7 @@ body {
 }
 
 /* Prevent overflow pushing buttons outside */
-.left-panel {
+.left-panel entry {
   overflow: hidden;
 }
 
